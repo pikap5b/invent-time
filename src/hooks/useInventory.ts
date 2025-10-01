@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react';
 import { InventoryItem } from '../types';
 
+// Default categories
+const defaultCategories = [
+  'Sound',
+  'Light',
+  'Vision',
+  'Cables',
+  'Clamps',
+  'Sound console',
+  'Light console',
+];
+
 // Mock data for demonstration
 const mockInventory: InventoryItem[] = [
   {
@@ -63,18 +74,29 @@ const mockInventory: InventoryItem[] = [
 
 export const useInventory = () => {
   const [items, setItems] = useState<InventoryItem[]>([]);
+  const [categories, setCategories] = useState<string[]>(defaultCategories);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Simulate API call
     setTimeout(() => {
       const storedItems = localStorage.getItem('inventory');
+      const storedCategories = localStorage.getItem('categories');
+      
       if (storedItems) {
         setItems(JSON.parse(storedItems));
       } else {
         setItems(mockInventory);
         localStorage.setItem('inventory', JSON.stringify(mockInventory));
       }
+      
+      if (storedCategories) {
+        setCategories(JSON.parse(storedCategories));
+      } else {
+        setCategories(defaultCategories);
+        localStorage.setItem('categories', JSON.stringify(defaultCategories));
+      }
+      
       setIsLoading(false);
     }, 1000);
   }, []);
@@ -107,11 +129,18 @@ export const useInventory = () => {
     localStorage.setItem('inventory', JSON.stringify(updatedItems));
   };
 
+  const updateCategories = (newCategories: string[]) => {
+    setCategories(newCategories);
+    localStorage.setItem('categories', JSON.stringify(newCategories));
+  };
+
   return {
     items,
+    categories,
     isLoading,
     addItem,
     updateItem,
     deleteItem,
+    updateCategories,
   };
 };

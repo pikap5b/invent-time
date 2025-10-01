@@ -6,10 +6,11 @@ interface ItemModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (item: Omit<InventoryItem, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  categories: string[];
   item?: InventoryItem | null;
 }
 
-export const ItemModal: React.FC<ItemModalProps> = ({ isOpen, onClose, onSave, item }) => {
+export const ItemModal: React.FC<ItemModalProps> = ({ isOpen, onClose, onSave, categories, item }) => {
   const [formData, setFormData] = useState({
     name: '',
     category: 'Sound',
@@ -55,16 +56,6 @@ export const ItemModal: React.FC<ItemModalProps> = ({ isOpen, onClose, onSave, i
     onSave(formData);
     onClose();
   };
-
-  const categories = [
-    'Sound',
-    'Light',
-    'Vision',
-    'Cables',
-    'Clamps',
-    'Sound console',
-    'Light console',
-  ];
 
   const statuses = ['Available', 'Not available', 'On site'];
 

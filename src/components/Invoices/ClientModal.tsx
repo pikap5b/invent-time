@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Client } from '../../types';
 
@@ -6,9 +6,10 @@ interface ClientModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (client: Omit<Client, 'id'>) => void;
+  client?: Client | null;
 }
 
-export const ClientModal: React.FC<ClientModalProps> = ({ isOpen, onClose, onSave }) => {
+export const ClientModal: React.FC<ClientModalProps> = ({ isOpen, onClose, onSave, client }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,16 +18,38 @@ export const ClientModal: React.FC<ClientModalProps> = ({ isOpen, onClose, onSav
     vatNumber: '',
   });
 
+  useEffect(() => {
+    if (client) {
+      setFormData({
+        name: client.name,
+        email: client.email,
+        address: client.address,
+        phone: client.phone,
+        vatNumber: client.vatNumber || '',
+      });
+    } else {
+      setFormData({
+        name: '',
+        email: '',
+        address: '',
+        phone: '',
+        vatNumber: '',
+      });
+    }
+  }, [client]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(formData);
-    setFormData({
-      name: '',
-      email: '',
-      address: '',
-      phone: '',
-      vatNumber: '',
-    });
+    if (!client) {
+      setFormData({
+        name: '',
+        email: '',
+        address: '',
+        phone: '',
+        vatNumber: '',
+      });
+    }
     onClose();
   };
 
@@ -36,7 +59,9 @@ export const ClientModal: React.FC<ClientModalProps> = ({ isOpen, onClose, onSav
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">Add New Client</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            {client ? 'Edit Client' : 'Add New Client'}
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 p-1"
@@ -122,7 +147,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({ isOpen, onClose, onSav
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
             >
-              Add Client
+              {client ? 'Update Client' : 'Add Client'}
             </button>
           </div>
         </form>

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { InventoryTable } from '../components/Inventory/InventoryTable';
 import { ItemModal } from '../components/Inventory/ItemModal';
+import { CategoryModal } from '../components/Inventory/CategoryModal';
 import { useInventory } from '../hooks/useInventory';
 import { InventoryItem } from '../types';
 
 export const Inventory: React.FC = () => {
-  const { items, addItem, updateItem, deleteItem } = useInventory();
+  const { items, categories, addItem, updateItem, deleteItem, updateCategories } = useInventory();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
 
   const handleAdd = () => {
@@ -37,16 +39,26 @@ export const Inventory: React.FC = () => {
     <div className="space-y-6">
       <InventoryTable
         items={items}
+        categories={categories}
         onAdd={handleAdd}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onManageCategories={() => setIsCategoryModalOpen(true)}
       />
 
       <ItemModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}
+        categories={categories}
         item={selectedItem}
+      />
+
+      <CategoryModal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        categories={categories}
+        onSave={updateCategories}
       />
     </div>
   );

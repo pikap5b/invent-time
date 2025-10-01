@@ -191,6 +191,35 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
                   </option>
                 ))}
               </select>
+              <div className="mt-2 flex space-x-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const selectedClient = clients.find(c => c.id === formData.clientId);
+                    if (selectedClient) {
+                      // This would need to be passed as props to handle client editing
+                      alert(`Edit client: ${selectedClient.name}`);
+                    }
+                  }}
+                  disabled={!formData.clientId}
+                  className="text-xs text-blue-600 hover:text-blue-800 disabled:text-gray-400"
+                >
+                  Edit Selected Client
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (formData.clientId && window.confirm('Are you sure you want to delete this client?')) {
+                      // This would need to be passed as props to handle client deletion
+                      alert(`Delete client functionality would go here`);
+                    }
+                  }}
+                  disabled={!formData.clientId}
+                  className="text-xs text-red-600 hover:text-red-800 disabled:text-gray-400"
+                >
+                  Delete Selected Client
+                </button>
+              </div>
             </div>
 
             <div>
